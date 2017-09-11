@@ -1,0 +1,54 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="components/queue-track.html">
+
+<dom-module id="view-favorites">
+    <template>
+        <provider-favorites id="favoritesProvider"
+                            state="[[state]]"
+                            user-favorites="{{_userFavorites}}">
+        </provider-favorites>
+
+        <firebase-query path="[[_getFavorites(state.auth.authedUser.uid, state.partyId)]]"
+                        data="{{favorites}}">
+        </firebase-query>
+
+        <template is="dom-repeat"
+                  items="[[favorites]]">
+            <queue-track metadata="[[trackMeta]]"
+                         state="[[state]]"
+                         track="[[item]]"
+                         user-favorites="[[favorites]]">
+            </queue-track>
+        </template>
+    </template>
+</dom-module>
+
+<script>
+    class FavoritesView extends Polymer.Element {
+        static get is() {
+            return 'view-favorites';
+        }
+
+        static get properties() {
+            return {
+                state: {
+                    type: Object,
+                    notify: true
+                },
+                favorites: {
+                    type: Array
+                },
+                trackMeta: {
+                    type: Object,
+                    value: () => Object.create(null)
+                }
+            };
+        }
+
+        _getFavorites(userId, partyId) {
+            return this.$.favoritesProvider._getFbUserFavoritesPath(userId, partyId)
+        }
+    }
+
+    customElements.define(FavoritesView.is, FavoritesView);
+</script>

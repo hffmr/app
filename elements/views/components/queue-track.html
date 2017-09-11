@@ -95,6 +95,9 @@
                 <paper-icon-button icon="[[_getLikeButtonIcon(track, _hasVoted)]]"
                                    on-tap="_tapLikeIcon">
                 </paper-icon-button>
+                <paper-icon-button icon="[[_getFavoriteButtonIcon(_hasFavorited)]]"
+                                   on-tap="_tapFavoriteIcon">
+                </paper-icon-button>
             </template>
             <template is="dom-if" if="[[playing]]">
                 <paper-fab mini
@@ -139,6 +142,10 @@
                 _hasVoted: {
                     type: Boolean,
                     computed: '_getHasVoted(userVotes.*, track.*)'
+                },
+                _hasFavorited: {
+                    type: Boolean,
+                    computed: '_getHasFavorited(userFavorites.*, track.*)'
                 }
             };
         }
@@ -158,6 +165,13 @@
             return votesChange.base[this._generateFbId(trackChange.base)] === true;
         }
 
+        _getHasFavorited(favoritesChange, trackChange) {
+            if (!favoritesChange.base || !trackChange.base) {
+                return;
+            }
+            return favoritesChange.base[this._generateFbId(trachChange.base)] === true;
+        }
+
         _getIsPlaying(stateChange, t) {
             if (t.isFromSearch) {
                 return false;
@@ -173,6 +187,10 @@
                 track.vote_count > 0 || track.is_fallback ?
                     'favorite-border' :
                     'add';
+        }
+
+        _getFavoriteButtonIcon(hasFavorited) {
+            return hasFavorited === true ? 'star' : 'star-border';
         }
 
         _getPlayPauseButtonIcon(isPlaying) {
@@ -203,6 +221,10 @@
             if (state && state.isOwner) {
                 this.fire('track-togglePlayPause');
             }
+        }
+
+        _tapFavoriteIcon() {
+            this.fire('track-toggleFavorite', { track: this.track });
         }
     }
 

@@ -17,6 +17,7 @@
 <link rel="import" href="../providers/provider-search.html">
 <link rel="import" href="../providers/provider-tracks.html">
 <link rel="import" href="../providers/provider-votes.html">
+<link rel="import" href="../providers/provider-favorites.html">
 <link rel="import" href="components/festify-spinner.html">
 <link rel="import" href="components/playback-progress-bar.html">
 <link rel="import" href="components/queue-drawer.html">
@@ -24,6 +25,7 @@
 <link rel="import" href="components/search-bar.html">
 <link rel="import" href="view-settings.html">
 <link rel="import" href="view-share.html">
+<link rel="import" href="view-favorites.html">
 
 <dom-module id="view-party">
     <template>
@@ -262,6 +264,11 @@
                     </view-settings>
 
                     <view-share view="share" state="[[state]]"></view-share>
+
+                    <view-favorites view="favorites"
+                                    state="[[state]]"
+                                    track-meta="[[_trackMeta]]">
+                    </view-favorites>
                 </iron-pages>
             </div>
         </app-drawer-layout>
