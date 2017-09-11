@@ -186,6 +186,11 @@
                         state="[[state]]"
                         user-votes="{{_userVotes}}">
         </provider-votes>
+        <provider-favorites id="favoritesProvider"
+                            state="[[state]]"
+                            user-votes="{{_userVote}}"
+                            user-favorites="{{_userFavorites}}">
+        </provider-favorites>
 
         <app-route route="{{route}}" pattern="/:view" data="{{_pageData}}"></app-route>
 
@@ -226,7 +231,8 @@
                                              metadata="[[_trackMeta]]"
                                              state="[[state]]"
                                              track="[[item]]"
-                                             user-votes="[[_userVotes]]">
+                                             user-votes="[[_userVotes]]"
+                                             user-favorites="[[_userFavorites]]">
                                 </queue-track>
                             </template>
                         </dom-flip>
@@ -267,7 +273,9 @@
 
                     <view-favorites view="favorites"
                                     state="[[state]]"
-                                    track-meta="[[_trackMeta]]">
+                                    track-meta="[[_trackMeta]]"
+                                    user-votes="[[_userVotes]]"
+                                    user-favorites="[[_userFavorites]]">
                     </view-favorites>
                 </iron-pages>
             </div>
@@ -376,6 +384,7 @@
             this.addEventListener('player-skip', ev => this._skipTrack(ev));
             this.addEventListener('track-togglePlayPause', ev => this._togglePlay(ev));
             this.addEventListener('track-toggleVote', ev => this._toggleVote(ev));
+            this.addEventListener('track-toggleFavorite', ev => this._toggleFavorite(ev))
 
             this._trackListener = ev => this._track(ev);
         }
@@ -500,6 +509,10 @@
 
         _toggleVote(ev) {
             this.$.voteProvider.toggleVote(ev.detail.track);
+        }
+
+        _toggleFavorite(ev) {
+            this.$.favoritesProvider.toggleFavorite(ev.detail.track);
         }
 
         _setFallbackPlaylist({ playlist, shuffle }) {

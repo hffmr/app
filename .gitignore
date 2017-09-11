@@ -25,6 +25,8 @@ database.rules.json
 firebase-debug.log
 GoogleService-Info.plist
 google-services.json
+.runtimeconfig.json
 
 # IDE
 .idea/
+.vscode/

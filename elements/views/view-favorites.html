@@ -1,23 +1,22 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../providers/provider-favorites.html">
 <link rel="import" href="components/queue-track.html">
 
 <dom-module id="view-favorites">
     <template>
         <provider-favorites id="favoritesProvider"
                             state="[[state]]"
+                            user-votes="[[userVotes]]"
                             user-favorites="{{_userFavorites}}">
         </provider-favorites>
-
-        <firebase-query path="[[_getFavorites(state.auth.authedUser.uid, state.partyId)]]"
-                        data="{{favorites}}">
-        </firebase-query>
 
         <template is="dom-repeat"
                   items="[[favorites]]">
             <queue-track metadata="[[trackMeta]]"
                          state="[[state]]"
                          track="[[item]]"
-                         user-favorites="[[favorites]]">
+                         user-votes="[[userVotes]]"
+                         user-favorites="[[_userFavorites]]">
             </queue-track>
         </template>
     </template>
@@ -35,18 +34,31 @@
                     type: Object,
                     notify: true
                 },
-                favorites: {
-                    type: Array
-                },
                 trackMeta: {
                     type: Object,
                     value: () => Object.create(null)
+                },
+                userVotes: {
+                    type: Object
+                },
+                favorites: {
+                    type: Array
                 }
             };
         }
 
-        _getFavorites(userId, partyId) {
-            return this.$.favoritesProvider._getFbUserFavoritesPath(userId, partyId)
+        static get observers () {
+            return [
+                "getTracks(_userFavorites.*)"
+            ];
+        }
+
+        getTracks (change) {
+            Promise.all(Object.keys(change.base).map((o) => {
+                return firebase.database().ref(`/tracks/${this.state.partyId}/${o}`).once("value")
+            })).then((all) => {
+                this.favorites = all.map(o => o.val());
+            })
         }
     }
 

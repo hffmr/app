@@ -46,7 +46,7 @@
 
             const trackId = this._generateFbId(track);
             return firebase.database()
-                .ref(this._getFbFavoritesPath(userId, partyId))
+                .ref(this._getFbUserFavoritesPath(userId, partyId))
                 .child(trackId)
                 .transaction(currentFavorite => !currentFavorite);
         }

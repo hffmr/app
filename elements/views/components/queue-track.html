@@ -143,6 +143,9 @@
                     type: Boolean,
                     computed: '_getHasVoted(userVotes.*, track.*)'
                 },
+                userFavorites: {
+                    type: Object
+                },
                 _hasFavorited: {
                     type: Boolean,
                     computed: '_getHasFavorited(userFavorites.*, track.*)'
@@ -169,7 +172,7 @@
             if (!favoritesChange.base || !trackChange.base) {
                 return;
             }
-            return favoritesChange.base[this._generateFbId(trachChange.base)] === true;
+            return favoritesChange.base[this._generateFbId(trackChange.base)] === true;
         }
 
         _getIsPlaying(stateChange, t) {
